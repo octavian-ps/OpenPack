@@ -1,0 +1,128 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="OpenPack.MainWindow"
+        Title="OpenPack" Width="800" Height="600">
+
+    <StackPanel x:Name="BrowserPanel" IsVisible="True">
+
+        <WrapPanel Margin="20">
+            
+            <ToggleButton x:Name="FirefoxToggle" Width="120" Height="120" Margin="5"> 
+                <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <Image Source="Icons/Firefox.png" Width="50" Height="50" />
+                    <TextBlock Text="Firefox" Margin="0,10,0,0" />
+                </StackPanel>
+            </ToggleButton>
+            
+            <ToggleButton x:Name="ChromeToggle" Width="120" Height="120" Margin="5"> 
+                <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <Image Source="Icons/Chrome.png" Width="50" Height="50" />
+                    <TextBlock Text="Chrome" Margin="0,10,0,0" />
+                </StackPanel>
+            </ToggleButton>
+            
+            <ToggleButton x:Name="BraveToggle" Width="120" Height="120" Margin="5"> 
+                <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <Image Source="Icons/Brave.png" Width="50" Height="50" />
+                    <TextBlock Text="Brave" Margin="0,10,0,0" />
+                </StackPanel>
+            </ToggleButton>
+            
+            <ToggleButton x:Name="OperaToggle" Width="120" Height="120" Margin="5"> 
+                <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <Image Source="Icons/Opera.png" Width="50" Height="50" />
+                    <TextBlock Text="Opera" Margin="0,10,0,0" />
+                </StackPanel>
+            </ToggleButton>
+            
+            <ToggleButton x:Name="OperaGXToggle" Width="120" Height="120" Margin="5"> 
+                <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <Image Source="Icons/OperaGX.png" Width="50" Height="50" />
+                    <TextBlock Text="Opera GX" Margin="0,10,0,0" />
+                </StackPanel>
+            </ToggleButton>
+            
+            <ToggleButton x:Name="DuckDuckGoToggle" Width="120" Height="120" Margin="5"> 
+                <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <Image Source="Icons/DuckDuckGo.png" Width="50" Height="50" />
+                    <TextBlock Text="DuckDuckGo" Margin="0,10,0,0" />
+                </StackPanel>
+            </ToggleButton>
+            
+            <ToggleButton x:Name="ArcToggle" Width="120" Height="120" Margin="5"> 
+                <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <Image Source="Icons/Arc.png" Width="50" Height="50" />
+                    <TextBlock Text="Arc Browser" Margin="0,10,0,0" />
+                </StackPanel>
+            </ToggleButton>
+
+        </WrapPanel>
+
+        <Button x:Name="StartInstallButton" 
+                Content="Install Selected" 
+                HorizontalAlignment="Center" 
+                Margin="20" 
+                Click="StartInstallButton_Click" />
+
+    </StackPanel>
+    
+    <StackPanel x:Name="AppsPanel" IsVisible="False">
+    
+        <WrapPanel Margin="20">
+            <ToggleButton x:Name="DiscordToggle" Width="120" Height="120" Margin="5">
+                <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <Image Source="Icons/apps/Discord.png"/>
+                    <TextBlock Text="Discord" Margin="0,10,0,0" />
+                </StackPanel>
+            </ToggleButton>
+            
+            <ToggleButton x:Name="ProtonPassToggle" Width="120" Height="120" Margin="5">
+                <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <Image Source="Icons/apps/ProtonPass.png"/>
+                    <TextBlock Text="Proton Pass" Margin="0,10,0,0" />
+                </StackPanel>
+            </ToggleButton>
+            
+            <ToggleButton x:Name="ProtonVPNToggle" Width="120" Height="120" Margin="5">
+                <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <Image Source="Icons/apps/ProtonVPN.png"/>
+                    <TextBlock Text="Proton VPN" Margin="0,10,0,0" />
+                </StackPanel>
+            </ToggleButton>
+            
+            <ToggleButton x:Name="ProtonDriveToggle" Width="120" Height="120" Margin="5">
+                <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <Image Source="Icons/apps/ProtonDrive.png"/>
+                    <TextBlock Text="Proton Drive" Margin="0,10,0,0" />
+                </StackPanel>
+            </ToggleButton>
+            
+            <ToggleButton x:Name="SteamToggle" Width="120" Height="120" Margin="5">
+                <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <Image Source="Icons/apps/Steam.png"/>
+                    <TextBlock Text="Steam" Margin="0,10,0,0" />
+                </StackPanel>
+            </ToggleButton>
+            
+            <ToggleButton x:Name="MalwarebytesToggle" Width="120" Height="120" Margin="5">
+                <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <Image Source="Icons/apps/Malwarebytes.png"/>
+                    <TextBlock Text="Malwarebytes" Margin="0,10,0,0" />
+                </StackPanel>
+            </ToggleButton>
+            
+            <ToggleButton x:Name="SpotifyToggle" Width="120" Height="120" Margin="5">
+                <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <Image Source="Icons/apps/Spotify.png"/>
+                    <TextBlock Text="Spotify" Margin="0,10,0,0" />
+                </StackPanel>
+            </ToggleButton>
+        </WrapPanel>
+
+        <Button x:Name="StartInstallButtonApps" 
+                Content="Install Selected Apps" 
+                HorizontalAlignment="Center" 
+                Margin="20" 
+                Click="StartInstallButton_Apps_Click" />
+    </StackPanel>
+</Window>
