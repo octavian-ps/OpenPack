@@ -166,7 +166,7 @@ public partial class MainWindow : Window
             var process = Process.Start(new ProcessStartInfo
             {
                 FileName = "winget",
-                Arguments = $"install --id \"{result.Id}\" --silent --accept-source-agreements --accept-package-agreements",
+                Arguments = $"install --id \"{result.Id}\" --exact --silent --accept-source-agreements --accept-package-agreements",               
                 UseShellExecute = false,
                 CreateNoWindow = true
             });
