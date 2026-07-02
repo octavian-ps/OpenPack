@@ -2,7 +2,8 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         x:Class="OpenPack.MainWindow"
         Title="OpenPack" Width="800" Height="600">
-
+    
+    <Grid>
     <StackPanel x:Name="BrowserPanel" IsVisible="True">
 
         <WrapPanel Margin="20">
@@ -55,6 +56,20 @@
                     <TextBlock Text="Arc Browser" Margin="0,10,0,0" />
                 </StackPanel>
             </ToggleButton>
+            
+            <ToggleButton x:Name="LibreWolfToggle" Width="120" Height="120" Margin="5"> 
+                <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <Image Source="Icons/Libre.png" Width="50" Height="50" />
+                    <TextBlock Text="LibreWolf" Margin="0,10,0,0" />
+                </StackPanel>
+            </ToggleButton>
+            
+            <ToggleButton x:Name="ZenToggle" Width="120" Height="120" Margin="5"> 
+                <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <Image Source="Icons/Zen.png" Width="50" Height="50" />
+                    <TextBlock Text="Zen Browser" Margin="0,10,0,0" />
+                </StackPanel>
+            </ToggleButton>
 
         </WrapPanel>
 
@@ -67,58 +82,9 @@
     </StackPanel>
     
     <StackPanel x:Name="AppsPanel" IsVisible="False">
-    
-        <WrapPanel Margin="20">
-            <ToggleButton x:Name="DiscordToggle" Width="120" Height="120" Margin="5">
-                <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-                    <Image Source="Icons/apps/Discord.png"/>
-                    <TextBlock Text="Discord" Margin="0,10,0,0" />
-                </StackPanel>
-            </ToggleButton>
-            
-            <ToggleButton x:Name="ProtonPassToggle" Width="120" Height="120" Margin="5">
-                <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-                    <Image Source="Icons/apps/ProtonPass.png"/>
-                    <TextBlock Text="Proton Pass" Margin="0,10,0,0" />
-                </StackPanel>
-            </ToggleButton>
-            
-            <ToggleButton x:Name="ProtonVPNToggle" Width="120" Height="120" Margin="5">
-                <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-                    <Image Source="Icons/apps/ProtonVPN.png"/>
-                    <TextBlock Text="Proton VPN" Margin="0,10,0,0" />
-                </StackPanel>
-            </ToggleButton>
-            
-            <ToggleButton x:Name="ProtonDriveToggle" Width="120" Height="120" Margin="5">
-                <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-                    <Image Source="Icons/apps/ProtonDrive.png"/>
-                    <TextBlock Text="Proton Drive" Margin="0,10,0,0" />
-                </StackPanel>
-            </ToggleButton>
-            
-            <ToggleButton x:Name="SteamToggle" Width="120" Height="120" Margin="5">
-                <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-                    <Image Source="Icons/apps/Steam.png"/>
-                    <TextBlock Text="Steam" Margin="0,10,0,0" />
-                </StackPanel>
-            </ToggleButton>
-            
-            <ToggleButton x:Name="MalwarebytesToggle" Width="120" Height="120" Margin="5">
-                <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-                    <Image Source="Icons/apps/Malwarebytes.png"/>
-                    <TextBlock Text="Malwarebytes" Margin="0,10,0,0" />
-                </StackPanel>
-            </ToggleButton>
-            
-            <ToggleButton x:Name="SpotifyToggle" Width="120" Height="120" Margin="5">
-                <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-                    <Image Source="Icons/apps/Spotify.png"/>
-                    <TextBlock Text="Spotify" Margin="0,10,0,0" />
-                </StackPanel>
-            </ToggleButton>
-        </WrapPanel>
-
+        <TextBox x:Name="AppsTextBoxSearch" KeyDown="AppsTextBoxSearch_KeyDown"></TextBox>
+        <Button x:Name="StartSearchButton" Content="Suchen" Click="StartSearchButton_Click"></Button>
+        <ListBox x:Name="AppsListBoxSearch" Height="400" SelectionMode="Multiple"></ListBox>
         <Button x:Name="StartInstallButtonApps" 
                 Content="Install Selected Apps" 
                 HorizontalAlignment="Center" 
@@ -143,4 +109,5 @@
                 Margin="20" 
                 Click="StartActivation_Click" />
     </StackPanel>
+        </Grid>
 </Window>

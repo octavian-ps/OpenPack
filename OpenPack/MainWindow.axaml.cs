@@ -51,6 +51,16 @@ public partial class MainWindow : Window
         {
             await InstallBrowser("Arc", "TheBrowserCompany.Arc");
         }
+        
+        if (LibreWolfToggle.IsChecked == true)
+        {
+            await InstallBrowser("LibreWolf", "LibreWolf.LibreWolf");
+        }
+        
+        if (ZenToggle.IsChecked == true)
+        {
+            await InstallBrowser("Zen Browser", "Zen-Team.Zen-Browser");
+        }
 
         StartInstallButton.Content = "Finished installing";
         BrowserPanel.IsVisible = false;
@@ -58,44 +68,90 @@ public partial class MainWindow : Window
     }
 
     //APPS PANEL
+    public void StartSearchButton_Click(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
+    {
+        PerformSearch();
+    }
+
+    public void AppsTextBoxSearch_KeyDown(object? sender, Avalonia.Input.KeyEventArgs e)
+    {
+        if (e.Key == Avalonia.Input.Key.Enter)
+        {
+            PerformSearch();
+        }
+    }
+
+    private async void PerformSearch()
+    {
+        string searchQuery = AppsTextBoxSearch.Text ?? "";
+    
+        if (string.IsNullOrWhiteSpace(searchQuery)) 
+        {
+            return; 
+        }
+        AppsListBoxSearch.Items.Clear(); 
+
+        try
+        {
+            System.Diagnostics.Process process = new System.Diagnostics.Process();
+            process.StartInfo.FileName = "winget";
+            process.StartInfo.Arguments = $"search \"{searchQuery}\" --accept-source-agreements";
+            process.StartInfo.UseShellExecute = false;
+            process.StartInfo.RedirectStandardOutput = true;
+            process.StartInfo.CreateNoWindow = true;
+
+            process.Start();
+
+            string output = await process.StandardOutput.ReadToEndAsync();
+            await process.WaitForExitAsync();
+            
+            var lines = output.Split('\n');
+            bool passedHeader = false;
+
+            foreach (var line in lines)
+            {
+                if (string.IsNullOrWhiteSpace(line)) continue;
+                if (!passedHeader)
+                {
+                    if (line.StartsWith("---"))
+                    {
+                        passedHeader = true;
+                    }
+                    continue;
+                }
+                
+                string[] parts = line.Split(new[] { "  " }, System.StringSplitOptions.RemoveEmptyEntries);
+    
+                if (parts.Length > 0)
+                {
+                    AppsListBoxSearch.Items.Add(parts[0].Trim());
+                }
+            }
+        }
+        catch (System.Exception ex)
+        {
+            AppsListBoxSearch.Items.Add("Fehler: " + ex.Message);
+        }
+    }
+    
     public async void StartInstallButton_Apps_Click(object? sender, RoutedEventArgs e)
     {
-        if (DiscordToggle.IsChecked == true)
+        foreach (var selectedItem in AppsListBoxSearch.SelectedItems)
         {
-            await InstallApps("Discord", "Discord.Discord");
-        }
+            string? appName = selectedItem?.ToString();
+            if (!string.IsNullOrEmpty(appName))
+            {
+                System.Diagnostics.Process process = new System.Diagnostics.Process();
+                process.StartInfo.FileName = "winget";
+                process.StartInfo.Arguments = $"install \"{appName}\" --accept-source-agreements --accept-package-agreements --silent";
+                process.StartInfo.UseShellExecute = false;
+                process.StartInfo.CreateNoWindow = true;
 
-        if (ProtonPassToggle.IsChecked == true)
-        {
-            await InstallApps("ProtonPass", "Proton.ProtonPass");
+                process.Start();
+                await process.WaitForExitAsync();
+            }
         }
-
-        if (ProtonVPNToggle.IsChecked == true)
-        {
-            await InstallApps("ProtonVpn", "Proton.ProtonVPN");
-        }
-
-        if (ProtonDriveToggle.IsChecked == true)
-        {
-            await InstallApps("ProtonDrive", "Proton.ProtonDrive");
-        }
-
-        if (SteamToggle.IsChecked == true)
-        {
-            await InstallApps("Steam", "Valve.Steam");
-        }
-
-        if (MalwarebytesToggle.IsChecked == true)
-        {
-            await InstallApps("Malwarebytes", "Malwarebytes.Malwarebytes");
-        }
-
-        if (SpotifyToggle.IsChecked == true)
-        {
-            await InstallApps("Spotify", "Spotify.Spotify");
-        }
-
-        StartInstallButtonApps.Content = "Finished installing";
+        
         AppsPanel.IsVisible = false;
         DebloatPanel.IsVisible = true;
     }
@@ -227,3 +283,5 @@ public partial class MainWindow : Window
         }
     }
 }
+
+//Task: Create back buttons 
