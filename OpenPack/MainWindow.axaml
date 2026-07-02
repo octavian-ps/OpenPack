@@ -82,9 +82,20 @@
     </StackPanel>
     
     <StackPanel x:Name="AppsPanel" IsVisible="False">
-        <TextBox x:Name="AppsTextBoxSearch" KeyDown="AppsTextBoxSearch_KeyDown"></TextBox>
-        <Button x:Name="StartSearchButton" Content="Suchen" Click="StartSearchButton_Click"></Button>
-        <ListBox x:Name="AppsListBoxSearch" Height="400" SelectionMode="Multiple"></ListBox>
+        <Button Content="&lt; Back" 
+                HorizontalAlignment="Left" 
+                Margin="10" 
+                Click="BackToBrowsers_Click" />
+        <TextBox x:Name="AppsTextBoxSearch" 
+                 Watermark="Search for an app..." 
+                 Margin="10,5,10,5"
+                 KeyDown="AppsTextBoxSearch_KeyDown" />
+        <Button x:Name="StartSearchButton" 
+                Content="Search" 
+                HorizontalAlignment="Left"
+                Margin="10,0,10,5"
+                Click="StartSearchButton_Click" />
+        <ListBox x:Name="AppsListBoxSearch" Height="400" SelectionMode="Multiple" Margin="10,0,10,5" />
         <Button x:Name="StartInstallButtonApps" 
                 Content="Install Selected Apps" 
                 HorizontalAlignment="Center" 
@@ -93,21 +104,27 @@
     </StackPanel>
     
     <StackPanel x:Name="DebloatPanel" IsVisible="False">
-
+        <Button Content="&lt; Back" 
+                HorizontalAlignment="Left" 
+                Margin="10" 
+                Click="BackToApps_Click" />
         <Button x:Name="StartDebloatButton" 
-                Content="Debloat " 
+                Content="Debloat" 
                 HorizontalAlignment="Center" 
                 Margin="20" 
                 Click="StartDebloat_Click" />
     </StackPanel>
     
     <StackPanel x:Name="ActivationPanel" IsVisible="False">
-
+        <Button Content="&lt; Back" 
+                HorizontalAlignment="Left" 
+                Margin="10" 
+                Click="BackToDebloat_Click" />
         <Button x:Name="StartActivationButton" 
-                Content="Check And Activate Windows 10/11 " 
+                Content="Check And Activate Windows 10/11" 
                 HorizontalAlignment="Center" 
                 Margin="20" 
                 Click="StartActivation_Click" />
     </StackPanel>
-        </Grid>
+    </Grid>
 </Window>

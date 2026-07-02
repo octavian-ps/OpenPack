@@ -1,11 +1,20 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 
 namespace OpenPack;
+
+// Holds both the display name and the winget ID for each search result
+public class SearchResult
+{
+    public string Name { get; set; } = "";
+    public string Id { get; set; } = "";
+    public override string ToString() => Name;
+}
 
 public partial class MainWindow : Window
 {
@@ -14,61 +23,62 @@ public partial class MainWindow : Window
         InitializeComponent();
     }
 
-    //BROOWSER PANEL
+    // BROWSER PANEL
     public async void StartInstallButton_Click(object? sender, RoutedEventArgs e)
     {
         if (FirefoxToggle.IsChecked == true)
-        {
-            await InstallBrowser("FireFox", "Mozilla.Firefox");
-        }
+            await InstallBrowser("Firefox", "Mozilla.Firefox");
 
         if (ChromeToggle.IsChecked == true)
-        {
             await InstallBrowser("Chrome", "Google.Chrome");
-        }
 
         if (BraveToggle.IsChecked == true)
-        {
             await InstallBrowser("Brave", "Brave.Brave");
-        }
 
         if (OperaToggle.IsChecked == true)
-        {
             await InstallBrowser("Opera", "Opera.Opera");
-        }
 
         if (OperaGXToggle.IsChecked == true)
-        {
-            await InstallBrowser("OperaGX", "Opera.OperaGX");
-        }
+            await InstallBrowser("Opera GX", "Opera.OperaGX");
 
         if (DuckDuckGoToggle.IsChecked == true)
-        {
             await InstallBrowser("DuckDuckGo", "DuckDuckGo.DesktopBrowser");
-        }
 
         if (ArcToggle.IsChecked == true)
-        {
             await InstallBrowser("Arc", "TheBrowserCompany.Arc");
-        }
-        
+
         if (LibreWolfToggle.IsChecked == true)
-        {
             await InstallBrowser("LibreWolf", "LibreWolf.LibreWolf");
-        }
-        
+
         if (ZenToggle.IsChecked == true)
-        {
             await InstallBrowser("Zen Browser", "Zen-Team.Zen-Browser");
-        }
 
         StartInstallButton.Content = "Finished installing";
         BrowserPanel.IsVisible = false;
         AppsPanel.IsVisible = true;
     }
 
-    //APPS PANEL
-    public void StartSearchButton_Click(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
+    // BACK BUTTONS
+    public void BackToBrowsers_Click(object? sender, RoutedEventArgs e)
+    {
+        AppsPanel.IsVisible = false;
+        BrowserPanel.IsVisible = true;
+    }
+
+    public void BackToApps_Click(object? sender, RoutedEventArgs e)
+    {
+        DebloatPanel.IsVisible = false;
+        AppsPanel.IsVisible = true;
+    }
+
+    public void BackToDebloat_Click(object? sender, RoutedEventArgs e)
+    {
+        ActivationPanel.IsVisible = false;
+        DebloatPanel.IsVisible = true;
+    }
+
+    // APPS PANEL
+    public void StartSearchButton_Click(object? sender, RoutedEventArgs e)
     {
         PerformSearch();
     }
@@ -76,24 +86,21 @@ public partial class MainWindow : Window
     public void AppsTextBoxSearch_KeyDown(object? sender, Avalonia.Input.KeyEventArgs e)
     {
         if (e.Key == Avalonia.Input.Key.Enter)
-        {
             PerformSearch();
-        }
     }
 
     private async void PerformSearch()
     {
         string searchQuery = AppsTextBoxSearch.Text ?? "";
-    
-        if (string.IsNullOrWhiteSpace(searchQuery)) 
-        {
-            return; 
-        }
-        AppsListBoxSearch.Items.Clear(); 
+
+        if (string.IsNullOrWhiteSpace(searchQuery))
+            return;
+
+        AppsListBoxSearch.Items.Clear();
 
         try
         {
-            System.Diagnostics.Process process = new System.Diagnostics.Process();
+            var process = new Process();
             process.StartInfo.FileName = "winget";
             process.StartInfo.Arguments = $"search \"{searchQuery}\" --accept-source-agreements";
             process.StartInfo.UseShellExecute = false;
@@ -104,58 +111,75 @@ public partial class MainWindow : Window
 
             string output = await process.StandardOutput.ReadToEndAsync();
             await process.WaitForExitAsync();
-            
+
             var lines = output.Split('\n');
             bool passedHeader = false;
 
             foreach (var line in lines)
             {
                 if (string.IsNullOrWhiteSpace(line)) continue;
+
                 if (!passedHeader)
                 {
                     if (line.StartsWith("---"))
-                    {
                         passedHeader = true;
-                    }
                     continue;
                 }
-                
-                string[] parts = line.Split(new[] { "  " }, System.StringSplitOptions.RemoveEmptyEntries);
-    
-                if (parts.Length > 0)
+
+                // winget output columns are separated by 2+ spaces
+                // Format: Name   Id   Version   Source
+                string[] parts = line.Split(new[] { "  " }, StringSplitOptions.RemoveEmptyEntries);
+
+                if (parts.Length >= 2)
                 {
-                    AppsListBoxSearch.Items.Add(parts[0].Trim());
+                    AppsListBoxSearch.Items.Add(new SearchResult
+                    {
+                        Name = parts[0].Trim(),
+                        Id = parts[1].Trim()
+                    });
                 }
             }
+
+            if (AppsListBoxSearch.Items.Count == 0)
+                AppsListBoxSearch.Items.Add(new SearchResult { Name = "No results found.", Id = "" });
         }
-        catch (System.Exception ex)
+        catch (Exception ex)
         {
-            AppsListBoxSearch.Items.Add("Fehler: " + ex.Message);
+            AppsListBoxSearch.Items.Add(new SearchResult { Name = "Error: " + ex.Message, Id = "" });
         }
     }
-    
+
     public async void StartInstallButton_Apps_Click(object? sender, RoutedEventArgs e)
     {
-        foreach (var selectedItem in AppsListBoxSearch.SelectedItems)
-        {
-            string? appName = selectedItem?.ToString();
-            if (!string.IsNullOrEmpty(appName))
-            {
-                System.Diagnostics.Process process = new System.Diagnostics.Process();
-                process.StartInfo.FileName = "winget";
-                process.StartInfo.Arguments = $"install \"{appName}\" --accept-source-agreements --accept-package-agreements --silent";
-                process.StartInfo.UseShellExecute = false;
-                process.StartInfo.CreateNoWindow = true;
+        var selectedItems = AppsListBoxSearch.SelectedItems.Cast<object>().ToList();
 
-                process.Start();
-                await process.WaitForExitAsync();
-            }
+        foreach (var selectedItem in selectedItems)
+        {
+            if (selectedItem is not SearchResult result)
+                continue;
+
+            if (string.IsNullOrEmpty(result.Id))
+                continue;
+
+            StartInstallButtonApps.Content = $"Installing {result.Name}...";
+
+            var process = Process.Start(new ProcessStartInfo
+            {
+                FileName = "winget",
+                Arguments = $"install --id \"{result.Id}\" --silent --accept-source-agreements --accept-package-agreements",
+                UseShellExecute = false,
+                CreateNoWindow = true
+            });
+
+            await process!.WaitForExitAsync();
         }
-        
+
+        StartInstallButtonApps.Content = "Finished installing";
         AppsPanel.IsVisible = false;
         DebloatPanel.IsVisible = true;
     }
 
+    // DEBLOAT PANEL
     public async void StartDebloat_Click(object? sender, RoutedEventArgs e)
     {
         if (Environment.OSVersion.Version.Build >= 22000)
@@ -170,10 +194,9 @@ public partial class MainWindow : Window
                 "Microsoft.WindowsMaps", "Microsoft.WindowsAlarms", "Microsoft.WindowsCamera",
                 "Microsoft.Paint3D", "Microsoft.MixedReality.Portal"
             };
+
             foreach (string item in win11Bloat)
-            {
-                await UninstallApp(item, item);
-            }
+                await UninstallApp(item);
         }
         else
         {
@@ -187,10 +210,9 @@ public partial class MainWindow : Window
                 "Microsoft.WindowsPhone", "Microsoft.ZuneVideo", "Microsoft.ZuneMusic",
                 "Microsoft.MicrosoftSolitaireCollection", "Microsoft.WindowsFeedbackHub"
             };
+
             foreach (string item in win10Bloat)
-            {
-                await UninstallApp(item, item);
-            }
+                await UninstallApp(item);
         }
 
         StartDebloatButton.Content = "Finished Debloating";
@@ -198,90 +220,71 @@ public partial class MainWindow : Window
         ActivationPanel.IsVisible = true;
     }
 
+    // ACTIVATION PANEL
     public async void StartActivation_Click(object? sender, RoutedEventArgs e)
     {
         await CheckWindowsActivation();
     }
 
-
-
+    // HELPERS
     private async Task InstallBrowser(string browserName, string wingetId)
     {
         StartInstallButton.Content = $"Installing {browserName}...";
 
-        var settings = new ProcessStartInfo
+        var process = Process.Start(new ProcessStartInfo
         {
             FileName = "winget",
             Arguments = $"install {wingetId} --silent --accept-package-agreements",
             CreateNoWindow = true
-        };
+        });
 
-        var setup = Process.Start(settings);
-        await setup.WaitForExitAsync();
+        await process!.WaitForExitAsync();
     }
 
-    private async Task InstallApps(string appName, string wingetId)
+    private async Task UninstallApp(string wingetId)
     {
-        StartInstallButtonApps.Content = $"Installing {appName}...";
+        StartDebloatButton.Content = $"Removing {wingetId}...";
 
-        var settings = new ProcessStartInfo
+        var process = Process.Start(new ProcessStartInfo
         {
             FileName = "winget",
-            Arguments = $"install {wingetId} --silent --accept-package-agreements",
+            Arguments = $"uninstall {wingetId} --silent",
             CreateNoWindow = true
-        };
+        });
 
-        var setup = Process.Start(settings);
-        await setup.WaitForExitAsync();
-    }
-
-    private async Task UninstallApp(string appName, string wingetId)
-    {
-        StartDebloatButton.Content = $"Removing {appName}...";
-
-        var settings = new ProcessStartInfo
-        {
-            FileName = "winget",
-            Arguments = $"uninstall {wingetId} --silent --accept-package-agreements",
-            CreateNoWindow = true
-        };
-
-        var setup = Process.Start(settings);
-        await setup.WaitForExitAsync();
+        await process!.WaitForExitAsync();
     }
 
     private async Task CheckWindowsActivation()
     {
-        var settings = new ProcessStartInfo
+        var process = Process.Start(new ProcessStartInfo
         {
             FileName = "powershell.exe",
-            Arguments =
-                "-Command \"(Get-CimInstance SoftwareLicensingProduct -Filter 'PartialProductKey is not null').LicenseStatus\"",
+            Arguments = "-Command \"(Get-CimInstance SoftwareLicensingProduct -Filter 'PartialProductKey is not null').LicenseStatus\"",
             CreateNoWindow = true,
             RedirectStandardOutput = true,
-            UseShellExecute = false,
-        };
-        var setup = Process.Start(settings);
-        await setup.WaitForExitAsync();
-        string answer = await setup.StandardOutput.ReadToEndAsync();
+            UseShellExecute = false
+        });
+
+        await process!.WaitForExitAsync();
+        string answer = await process.StandardOutput.ReadToEndAsync();
 
         if (answer.Trim() == "1")
         {
-            StartActivationButton.Content = "Windows is Already Activated";
+            StartActivationButton.Content = "Windows is already activated.";
         }
         else
         {
-            StartActivationButton.Content = "Windows is yet not Activated one powershell command is being execuded";
+            StartActivationButton.Content = "Activating Windows...";
 
-            var activateSettings = new ProcessStartInfo
+            var activate = Process.Start(new ProcessStartInfo
             {
                 FileName = "powershell.exe",
-                Arguments = "-Command \"irm https://get.activated.win | iex\"",
-            };
-            var setupactivation = Process.Start(activateSettings);
-            await setupactivation.WaitForExitAsync();
+                Arguments = "-Command \"irm https://get.activated.win | iex\""
+            });
+
+            await activate!.WaitForExitAsync();
+            StartActivationButton.Content = "Done!";
         }
     }
 }
-
-//Task: Create back buttons 
