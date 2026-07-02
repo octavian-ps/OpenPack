@@ -22,17 +22,13 @@ Pick one or more browsers to install:
 - **Opera GX** — Opera.OperaGX
 - **DuckDuckGo Browser** — DuckDuckGo.DesktopBrowser
 - **Arc Browser** — TheBrowserCompany.Arc
+- **LibreWolf** — LibreWolf.LibreWolf
+- **Zen Browser** — Zen-Team.Zen-Browser
 
 ### 📦 Step 2 — Apps
-Choose your desired applications:
+Instead of a fixed list, OpenPack lets you **search winget directly** from within the app. Type any app name, hit Search or press Enter, and results appear instantly. Select one or multiple apps from the list and click install — OpenPack handles the rest.
 
-- **Discord** — Discord.Discord
-- **Proton Pass** — Proton.ProtonPass
-- **Proton VPN** — Proton.ProtonVPN
-- **Proton Drive** — Proton.ProtonDrive
-- **Steam** — Valve.Steam
-- **Malwarebytes** — Malwarebytes.Malwarebytes
-- **Spotify** — Spotify.Spotify
+This means you have access to the **entire winget catalog** — tens of thousands of apps — not just a pre-defined selection.
 
 ### 🧹 Step 3 — Debloat
 Automatically removes pre-installed Microsoft bloatware — tailored to your Windows version:
@@ -49,11 +45,11 @@ Checks whether Windows is already activated. If not, it runs the activation proc
 
 1. Launch OpenPack
 2. Select your **browsers** and click **"Install Selected"**
-3. Select your **apps** and click **"Install Selected Apps"**
+3. **Search** for any app by name, select one or more results, and click **"Install Selected Apps"**
 4. Click **"Debloat"** to remove unwanted Microsoft apps (auto-detected for Win10/11)
 5. Click **"Check And Activate Windows 10/11"** — OpenPack checks your activation status and activates if needed
 
-Every step flows into the next automatically. All installations and removals run silently in the background.
+Every step flows into the next automatically. All installations and removals run silently in the background. You can also go **back** to any previous step at any time.
 
 ---
 
@@ -98,16 +94,10 @@ dotnet run --project OpenPack
 
 ## 🔮 What's Coming Next?
 
-OpenPack is just getting started — and this is only the beginning! Here's what's actively being worked on and planned for upcoming releases:
+OpenPack is actively being developed and new things keep arriving. Here's what's planned for upcoming releases:
 
 ### 🎨 Improved Design
 A full UI overhaul is on the way — cleaner layout, better visual structure, and a more polished overall look and feel.
-
-### 📦 100+ Apps with Search
-The app library is getting a massive expansion to over 100 apps across all categories. A built-in **search bar** will let you find exactly what you need instantly — no more scrolling through endless lists.
-
-### 🌐 More Browsers
-Additional browsers will be added to the browser selection, covering even more options for every kind of user.
 
 ### 🛡️ Better Detection & Error Handling
 Improved system detection (Windows version, already installed apps, activation status) and proper error handling throughout — so OpenPack handles edge cases gracefully instead of failing silently.
