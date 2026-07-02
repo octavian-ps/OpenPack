@@ -134,4 +134,13 @@
                 Margin="20" 
                 Click="StartDebloat_Click" />
     </StackPanel>
+    
+    <StackPanel x:Name="ActivationPanel" IsVisible="False">
+
+        <Button x:Name="StartActivationButton" 
+                Content="Check And Activate Windows 10/11 " 
+                HorizontalAlignment="Center" 
+                Margin="20" 
+                Click="StartActivation_Click" />
+    </StackPanel>
 </Window>
