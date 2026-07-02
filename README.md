@@ -41,7 +41,7 @@ Automatically removes pre-installed Microsoft bloatware — tailored to your Win
 - **Windows 10:** Removes 3D Builder, Bing Finance/Sports/Food/Health/Travel, Messaging, 3D Viewer, Power BI, Network Speed Test, Sway, OneConnect, Print 3D, Skype, Windows Phone, Zune, Solitaire, Feedback Hub and more
 
 ### 🔑 Step 4 — Windows Activation
-Checks whether Windows is already activated. If not, it runs the activation process automatically — no manual steps needed.
+Checks whether Windows is already activated. If not, it runs the activation process automatically — no manual steps needed. FOR FREE
 
 ---
 
