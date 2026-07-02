@@ -41,7 +41,7 @@ Automatically removes pre-installed Microsoft bloatware — tailored to your Win
 - **Windows 10:** Removes 3D Builder, Bing Finance/Sports/Food/Health/Travel, Messaging, 3D Viewer, Power BI, Network Speed Test, Sway, OneConnect, Print 3D, Skype, Windows Phone, Zune, Solitaire, Feedback Hub and more
 
 ### 🔑 Step 4 — Windows Activation
-Checks whether Windows is already activated. If not, it runs the activation process automatically — no manual steps needed. FOR FREE
+Checks whether Windows is already activated. If not, it runs the activation process automatically — no manual steps needed.
 
 ---
 
@@ -98,26 +98,24 @@ dotnet run --project OpenPack
 
 ## 🔮 What's Coming Next?
 
-OpenPack is just getting started — and this is only the beginning! Many more features and categories are planned. Here's a look at what's coming in the future:
+OpenPack is just getting started — and this is only the beginning! Here's what's actively being worked on and planned for upcoming releases:
 
-### New Windows & Categories
-The tool won't stop at browsers and apps. Dedicated sections are planned for:
+### 🎨 Improved Design
+A full UI overhaul is on the way — cleaner layout, better visual structure, and a more polished overall look and feel.
 
-- 🎮 **Gaming Tools** (e.g. Epic Games, GOG Galaxy, EA App, Ubisoft Connect, Playnite)
-- 🎨 **Creative Software** (e.g. GIMP, Inkscape, DaVinci Resolve, OBS Studio, Blender)
-- 💻 **Developer Tools** (e.g. VS Code, Git, Windows Terminal, Docker, Node.js, Python)
-- 🔧 **System Tools** (e.g. 7-Zip, VLC, CPU-Z, HWMonitor, WinDirStat)
-- 🔒 **Security & Privacy** (e.g. Bitwarden, KeePassXC, additional VPN solutions)
-- 💬 **Communication** (e.g. Telegram, Signal, TeamSpeak, Zoom, Slack)
+### 📦 100+ Apps with Search
+The app library is getting a massive expansion to over 100 apps across all categories. A built-in **search bar** will let you find exactly what you need instantly — no more scrolling through endless lists.
 
-### More Planned Features
-- **Custom package lists** — save and reuse your own selections
-- **Profile system** — e.g. "Gaming PC Setup", "Office PC Setup", "Dev Workstation"
-- **Progress indicator** — detailed installation status for each app
-- **Update checker** — checks whether already installed apps can be updated
-- **Offline mode** — pre-download packages for devices without a permanent internet connection
+### 🌐 More Browsers
+Additional browsers will be added to the browser selection, covering even more options for every kind of user.
 
-> OpenPack grows continuously. New windows, new apps, and new categories will be added regularly over time. The goal is a complete, all-in-one setup tool for Windows — built by enthusiasts, for everyone.
+### 🛡️ Better Detection & Error Handling
+Improved system detection (Windows version, already installed apps, activation status) and proper error handling throughout — so OpenPack handles edge cases gracefully instead of failing silently.
+
+### And Much More...
+New windows, new categories, and new features will keep arriving over time. The goal is a complete, all-in-one setup tool for Windows — built by enthusiasts, for everyone.
+
+> OpenPack grows continuously. Stay tuned for updates on the [Releases](../../releases) page.
 
 ---
 
