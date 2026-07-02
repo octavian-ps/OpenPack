@@ -125,4 +125,13 @@
                 Margin="20" 
                 Click="StartInstallButton_Apps_Click" />
     </StackPanel>
+    
+    <StackPanel x:Name="DebloatPanel" IsVisible="False">
+
+        <Button x:Name="StartDebloatButton" 
+                Content="Debloat " 
+                HorizontalAlignment="Center" 
+                Margin="20" 
+                Click="StartDebloat_Click" />
+    </StackPanel>
 </Window>
