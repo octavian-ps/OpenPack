@@ -59,22 +59,27 @@ public partial class MainWindow : Window
     }
 
     // BACK BUTTONS
+    // BACK BUTTONS
     public void BackToBrowsers_Click(object? sender, RoutedEventArgs e)
     {
         AppsPanel.IsVisible = false;
         BrowserPanel.IsVisible = true;
+        StartInstallButton.Content = "Install Selected";
     }
 
     public void BackToApps_Click(object? sender, RoutedEventArgs e)
     {
         DebloatPanel.IsVisible = false;
         AppsPanel.IsVisible = true;
+        StartInstallButtonApps.IsEnabled = true;
+        StartInstallButtonApps.Content = "Install Selected Apps";
     }
 
     public void BackToDebloat_Click(object? sender, RoutedEventArgs e)
     {
         ActivationPanel.IsVisible = false;
         DebloatPanel.IsVisible = true;
+        StartDebloatButton.Content = "Debloat"; 
     }
 
     // APPS PANEL
@@ -152,6 +157,7 @@ public partial class MainWindow : Window
     public async void StartInstallButton_Apps_Click(object? sender, RoutedEventArgs e)
     {
         var selectedItems = AppsListBoxSearch.SelectedItems.Cast<object>().ToList();
+        StartInstallButtonApps.IsEnabled = false;
 
         foreach (var selectedItem in selectedItems)
         {
@@ -161,20 +167,29 @@ public partial class MainWindow : Window
             if (string.IsNullOrEmpty(result.Id))
                 continue;
 
-            StartInstallButtonApps.Content = $"Installing {result.Name}...";
-
-            var process = Process.Start(new ProcessStartInfo
+            try
             {
-                FileName = "winget",
-                Arguments = $"install --id \"{result.Id}\" --exact --silent --accept-source-agreements --accept-package-agreements",               
-                UseShellExecute = false,
-                CreateNoWindow = true
-            });
+                StartInstallButtonApps.Content = $"Installing {result.Name}...";
+                var process = Process.Start(new ProcessStartInfo
+                {
+                    FileName = "winget",
+                    Arguments = $"install --id \"{result.Id}\" --exact --silent --accept-source-agreements --accept-package-agreements",
+                    UseShellExecute = false,
+                    CreateNoWindow = true
+                });
 
-            await process!.WaitForExitAsync();
+                await process!.WaitForExitAsync();
+            }
+            catch
+            {
+                StartInstallButtonApps.Content = $"Error Installing {result.Name}";
+                await Task.Delay(2000);
+            }
         }
-
+        
         StartInstallButtonApps.Content = "Finished installing";
+        await Task.Delay(1000);
+    
         AppsPanel.IsVisible = false;
         DebloatPanel.IsVisible = true;
     }
@@ -243,16 +258,30 @@ public partial class MainWindow : Window
 
     private async Task UninstallApp(string wingetId)
     {
-        StartDebloatButton.Content = $"Removing {wingetId}...";
-
-        var process = Process.Start(new ProcessStartInfo
+        try
         {
-            FileName = "winget",
-            Arguments = $"uninstall {wingetId} --silent",
-            CreateNoWindow = true
-        });
+            StartDebloatButton.Content = $"Removing {wingetId}...";
 
-        await process!.WaitForExitAsync();
+            var process = Process.Start(new ProcessStartInfo
+            {
+                FileName = "winget",
+                Arguments = $"uninstall {wingetId} --silent",
+                CreateNoWindow = true
+            });
+
+            await process!.WaitForExitAsync();
+
+            if (process.ExitCode != 0)
+            {
+                StartDebloatButton.Content = $"Error Removing {wingetId}";
+                await Task.Delay(1000);
+            }
+        }
+        catch
+        {
+            StartDebloatButton.Content = $"Critical Error for {wingetId}";
+            await Task.Delay(1000);
+        }
     }
 
     private async Task CheckWindowsActivation()
@@ -275,16 +304,24 @@ public partial class MainWindow : Window
         }
         else
         {
-            StartActivationButton.Content = "Activating Windows...";
-
-            var activate = Process.Start(new ProcessStartInfo
+            try
             {
-                FileName = "powershell.exe",
-                Arguments = "-Command \"irm https://get.activated.win | iex\""
-            });
+                StartActivationButton.Content = "Activating Windows...";
 
-            await activate!.WaitForExitAsync();
-            StartActivationButton.Content = "Done!";
+                var activate = Process.Start(new ProcessStartInfo
+                {
+                    FileName = "powershell.exe",
+                    Arguments = "-Command \"irm https://get.activated.win | iex\""
+                });
+
+                await activate!.WaitForExitAsync();
+                StartActivationButton.Content = "Done!";
+            }
+            catch
+            {
+                StartActivationButton.Content = "No internet Connection";
+            }
+           
         }
     }
 }
