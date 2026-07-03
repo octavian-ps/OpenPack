@@ -8,7 +8,6 @@ using Avalonia.Interactivity;
 
 namespace OpenPack;
 
-// Holds both the display name and the winget ID for each search result
 public class SearchResult
 {
     public string Name { get; set; } = "";
@@ -23,66 +22,32 @@ public partial class MainWindow : Window
         InitializeComponent();
     }
 
-    // BROWSER PANEL
+    // BROWSER PANEL 
     public async void StartInstallButton_Click(object? sender, RoutedEventArgs e)
     {
-        if (FirefoxToggle.IsChecked == true)
-            await InstallBrowser("Firefox", "Mozilla.Firefox");
+        
+        bool anySelected = FirefoxToggle.IsChecked == true || ChromeToggle.IsChecked == true || 
+                           BraveToggle.IsChecked == true || OperaToggle.IsChecked == true || 
+                           OperaGXToggle.IsChecked == true || DuckDuckGoToggle.IsChecked == true || 
+                           ArcToggle.IsChecked == true || LibreWolfToggle.IsChecked == true || 
+                           ZenToggle.IsChecked == true;
 
-        if (ChromeToggle.IsChecked == true)
-            await InstallBrowser("Chrome", "Google.Chrome");
+        if (!anySelected) return;
 
-        if (BraveToggle.IsChecked == true)
-            await InstallBrowser("Brave", "Brave.Brave");
-
-        if (OperaToggle.IsChecked == true)
-            await InstallBrowser("Opera", "Opera.Opera");
-
-        if (OperaGXToggle.IsChecked == true)
-            await InstallBrowser("Opera GX", "Opera.OperaGX");
-
-        if (DuckDuckGoToggle.IsChecked == true)
-            await InstallBrowser("DuckDuckGo", "DuckDuckGo.DesktopBrowser");
-
-        if (ArcToggle.IsChecked == true)
-            await InstallBrowser("Arc", "TheBrowserCompany.Arc");
-
-        if (LibreWolfToggle.IsChecked == true)
-            await InstallBrowser("LibreWolf", "LibreWolf.LibreWolf");
-
-        if (ZenToggle.IsChecked == true)
-            await InstallBrowser("Zen Browser", "Zen-Team.Zen-Browser");
+        if (FirefoxToggle.IsChecked == true) await InstallBrowser("Firefox", "Mozilla.Firefox");
+        if (ChromeToggle.IsChecked == true) await InstallBrowser("Chrome", "Google.Chrome");
+        if (BraveToggle.IsChecked == true) await InstallBrowser("Brave", "Brave.Brave");
+        if (OperaToggle.IsChecked == true) await InstallBrowser("Opera", "Opera.Opera");
+        if (OperaGXToggle.IsChecked == true) await InstallBrowser("Opera GX", "Opera.OperaGX");
+        if (DuckDuckGoToggle.IsChecked == true) await InstallBrowser("DuckDuckGo", "DuckDuckGo.DesktopBrowser");
+        if (ArcToggle.IsChecked == true) await InstallBrowser("Arc", "TheBrowserCompany.Arc");
+        if (LibreWolfToggle.IsChecked == true) await InstallBrowser("LibreWolf", "LibreWolf.LibreWolf");
+        if (ZenToggle.IsChecked == true) await InstallBrowser("Zen Browser", "Zen-Team.Zen-Browser");
 
         StartInstallButton.Content = "Finished installing";
-        BrowserPanel.IsVisible = false;
-        AppsPanel.IsVisible = true;
     }
 
-    // BACK BUTTONS
-    // BACK BUTTONS
-    public void BackToBrowsers_Click(object? sender, RoutedEventArgs e)
-    {
-        AppsPanel.IsVisible = false;
-        BrowserPanel.IsVisible = true;
-        StartInstallButton.Content = "Install Selected";
-    }
-
-    public void BackToApps_Click(object? sender, RoutedEventArgs e)
-    {
-        DebloatPanel.IsVisible = false;
-        AppsPanel.IsVisible = true;
-        StartInstallButtonApps.IsEnabled = true;
-        StartInstallButtonApps.Content = "Install Selected Apps";
-    }
-
-    public void BackToDebloat_Click(object? sender, RoutedEventArgs e)
-    {
-        ActivationPanel.IsVisible = false;
-        DebloatPanel.IsVisible = true;
-        StartDebloatButton.Content = "Debloat"; 
-    }
-
-    // APPS PANEL
+    // APPS PANEL 
     public void StartSearchButton_Click(object? sender, RoutedEventArgs e)
     {
         PerformSearch();
@@ -97,9 +62,7 @@ public partial class MainWindow : Window
     private async void PerformSearch()
     {
         string searchQuery = AppsTextBoxSearch.Text ?? "";
-
-        if (string.IsNullOrWhiteSpace(searchQuery))
-            return;
+        if (string.IsNullOrWhiteSpace(searchQuery)) return;
 
         AppsListBoxSearch.Items.Clear();
 
@@ -113,7 +76,6 @@ public partial class MainWindow : Window
             process.StartInfo.CreateNoWindow = true;
 
             process.Start();
-
             string output = await process.StandardOutput.ReadToEndAsync();
             await process.WaitForExitAsync();
 
@@ -126,15 +88,11 @@ public partial class MainWindow : Window
 
                 if (!passedHeader)
                 {
-                    if (line.StartsWith("---"))
-                        passedHeader = true;
+                    if (line.StartsWith("---")) passedHeader = true;
                     continue;
                 }
 
-                // winget output columns are separated by 2+ spaces
-                // Format: Name   Id   Version   Source
                 string[] parts = line.Split(new[] { "  " }, StringSplitOptions.RemoveEmptyEntries);
-
                 if (parts.Length >= 2)
                 {
                     AppsListBoxSearch.Items.Add(new SearchResult
@@ -157,16 +115,21 @@ public partial class MainWindow : Window
     public async void StartInstallButton_Apps_Click(object? sender, RoutedEventArgs e)
     {
         var selectedItems = AppsListBoxSearch.SelectedItems.Cast<object>().ToList();
+        if (selectedItems.Count == 0) return; 
+
         StartInstallButtonApps.IsEnabled = false;
 
         foreach (var selectedItem in selectedItems)
         {
-            if (selectedItem is not SearchResult result)
+            if (selectedItem is not SearchResult result || string.IsNullOrEmpty(result.Id)) continue;
+            
+            StartInstallButtonApps.Content = $"Checking {result.Name}...";
+            if (await IsAppInstalled(result.Id))
+            {
+                StartInstallButtonApps.Content = $"{result.Name} already exists!";
+                await Task.Delay(1500);
                 continue;
-
-            if (string.IsNullOrEmpty(result.Id))
-                continue;
-
+            }
             try
             {
                 StartInstallButtonApps.Content = $"Installing {result.Name}...";
@@ -189,70 +152,75 @@ public partial class MainWindow : Window
         
         StartInstallButtonApps.Content = "Finished installing";
         await Task.Delay(1000);
-    
-        AppsPanel.IsVisible = false;
-        DebloatPanel.IsVisible = true;
+        StartInstallButtonApps.IsEnabled = true; // Button wieder aktivieren!
     }
 
-    // DEBLOAT PANEL
+    //  DEBLOAT PANEL
     public async void StartDebloat_Click(object? sender, RoutedEventArgs e)
     {
-        if (Environment.OSVersion.Version.Build >= 22000)
+        List<string> bloatwareList = GetBloatwareList();
+
+        foreach (string item in bloatwareList)
         {
-            List<string> win11Bloat = new List<string>
-            {
-                "Microsoft.BingNews", "Microsoft.BingWeather", "Microsoft.Getstarted",
-                "Microsoft.YourPhone", "Microsoft.WindowsFeedbackHub", "Microsoft.XboxApp",
-                "Microsoft.XboxGamingOverlay", "Microsoft.XboxSpeechToTextOverlay", "Microsoft.ZuneVideo",
-                "Microsoft.ZuneMusic", "Microsoft.MicrosoftOfficeHub", "Microsoft.SkypeApp",
-                "Microsoft.MicrosoftSolitaireCollection", "Microsoft.Todos", "Microsoft.People",
-                "Microsoft.WindowsMaps", "Microsoft.WindowsAlarms", "Microsoft.WindowsCamera",
-                "Microsoft.Paint3D", "Microsoft.MixedReality.Portal"
-            };
-
-            foreach (string item in win11Bloat)
-                await UninstallApp(item);
+            await UninstallApp(item);
         }
-        else
-        {
-            List<string> win10Bloat = new List<string>
-            {
-                "Microsoft.3DBuilder", "Microsoft.Appconnector", "Microsoft.BingFinance",
-                "Microsoft.BingSports", "Microsoft.BingFoodAndDrink", "Microsoft.BingHealthAndFitness",
-                "Microsoft.BingTravel", "Microsoft.Messaging", "Microsoft.Microsoft3DViewer",
-                "Microsoft.MicrosoftPowerBIForWindows", "Microsoft.NetworkSpeedTest", "Microsoft.Office.Sway",
-                "Microsoft.OneConnect", "Microsoft.Print3D", "Microsoft.SkypeApp",
-                "Microsoft.WindowsPhone", "Microsoft.ZuneVideo", "Microsoft.ZuneMusic",
-                "Microsoft.MicrosoftSolitaireCollection", "Microsoft.WindowsFeedbackHub"
-            };
-
-            foreach (string item in win10Bloat)
-                await UninstallApp(item);
-        }
-
+        await DisableWindowsTelemetry();
         StartDebloatButton.Content = "Finished Debloating";
-        DebloatPanel.IsVisible = false;
-        ActivationPanel.IsVisible = true;
     }
 
-    // ACTIVATION PANEL
+    //  ACTIVATION PANEL
     public async void StartActivation_Click(object? sender, RoutedEventArgs e)
     {
         await CheckWindowsActivation();
     }
 
-    // HELPERS
+    //  SIDEBAR NAVIGATION 
+    public void NavBrowsers_Click(object? sender, RoutedEventArgs e)
+    {
+        TogglePanels(true, false, false, false);
+    }
+    
+    public void NavApps_Click(object? sender, RoutedEventArgs e)
+    {
+        TogglePanels(false, true, false, false);
+    }
+    
+    public void NavDebloat_Click(object? sender, RoutedEventArgs e)
+    {
+        TogglePanels(false, false, true, false);
+    }
+    
+    public void NavActivation_Click(object? sender, RoutedEventArgs e)
+    {
+        TogglePanels(false, false, false, true);
+    }
+
+    private void TogglePanels(bool browser, bool apps, bool debloat, bool activation)
+    {
+        BrowserPanel.IsVisible = browser;
+        AppsPanel.IsVisible = apps;
+        DebloatPanel.IsVisible = debloat;
+        ActivationPanel.IsVisible = activation;
+    }
+
+    // HELPERS 
     private async Task InstallBrowser(string browserName, string wingetId)
     {
+        StartInstallButton.Content = $"Checking {browserName}...";
+        if (await IsAppInstalled(wingetId))
+        {
+            StartInstallButton.Content = $"{browserName} already exists!";
+            await Task.Delay(1500);
+            return;
+        }
+        
         StartInstallButton.Content = $"Installing {browserName}...";
-
         var process = Process.Start(new ProcessStartInfo
         {
             FileName = "winget",
             Arguments = $"install {wingetId} --silent --accept-package-agreements",
             CreateNoWindow = true
         });
-
         await process!.WaitForExitAsync();
     }
 
@@ -261,7 +229,6 @@ public partial class MainWindow : Window
         try
         {
             StartDebloatButton.Content = $"Removing {wingetId}...";
-
             var process = Process.Start(new ProcessStartInfo
             {
                 FileName = "winget",
@@ -307,7 +274,6 @@ public partial class MainWindow : Window
             try
             {
                 StartActivationButton.Content = "Activating Windows...";
-
                 var activate = Process.Start(new ProcessStartInfo
                 {
                     FileName = "powershell.exe",
@@ -321,7 +287,81 @@ public partial class MainWindow : Window
             {
                 StartActivationButton.Content = "No internet Connection";
             }
-           
+        }
+    }
+    
+    private async Task<bool> IsAppInstalled(string wingetId)
+    {
+        try
+        {
+            var process = new Process();
+            process.StartInfo.FileName = "winget";
+            process.StartInfo.Arguments = $"list --id \"{wingetId}\" --exact";
+            process.StartInfo.UseShellExecute = false;
+            process.StartInfo.RedirectStandardOutput = true;
+            process.StartInfo.CreateNoWindow = true;
+
+            process.Start();
+            string output = await process.StandardOutput.ReadToEndAsync();
+            await process.WaitForExitAsync();
+            
+            return output.Contains(wingetId);
+        }
+        catch
+        {
+            return false;
+        }
+    }
+    
+    private async Task DisableWindowsTelemetry()
+    {
+        try
+        {
+            StartDebloatButton.Content = "Disabling Telemetry...";
+            var process = Process.Start(new ProcessStartInfo
+            {
+                FileName = "powershell.exe",
+                Arguments = "-Command \"Set-ItemProperty -Path 'HKLM:\\SOFTWARE\\Policies\\Microsoft\\Windows\\DataCollection' -Name 'AllowTelemetry' -Value 0 -Force\"",
+                CreateNoWindow = true,
+                UseShellExecute = true,
+                Verb = "runas" //needddss admin UwU Rights
+            });
+            await process!.WaitForExitAsync();
+        }
+        catch
+        {
+            StartDebloatButton.Content = "Telemetry Block Failed (No Admin?)";
+            await Task.Delay(2000);
+        }
+    }
+
+    private List<string> GetBloatwareList()
+    {
+        if (Environment.OSVersion.Version.Build >= 22000)
+        {
+            return new List<string>
+            {
+                "Microsoft.BingNews", "Microsoft.BingWeather", "Microsoft.Getstarted",
+                "Microsoft.YourPhone", "Microsoft.WindowsFeedbackHub", "Microsoft.XboxApp",
+                "Microsoft.XboxGamingOverlay", "Microsoft.XboxSpeechToTextOverlay", "Microsoft.ZuneVideo",
+                "Microsoft.ZuneMusic", "Microsoft.MicrosoftOfficeHub", "Microsoft.SkypeApp",
+                "Microsoft.MicrosoftSolitaireCollection", "Microsoft.Todos", "Microsoft.People",
+                "Microsoft.WindowsMaps", "Microsoft.WindowsAlarms", "Microsoft.WindowsCamera",
+                "Microsoft.Paint3D", "Microsoft.MixedReality.Portal"
+            };
+        }
+        else
+        {
+            return new List<string>
+            {
+                "Microsoft.3DBuilder", "Microsoft.Appconnector", "Microsoft.BingFinance",
+                "Microsoft.BingSports", "Microsoft.BingFoodAndDrink", "Microsoft.BingHealthAndFitness",
+                "Microsoft.BingTravel", "Microsoft.Messaging", "Microsoft.Microsoft3DViewer",
+                "Microsoft.MicrosoftPowerBIForWindows", "Microsoft.NetworkSpeedTest", "Microsoft.Office.Sway",
+                "Microsoft.OneConnect", "Microsoft.Print3D", "Microsoft.SkypeApp",
+                "Microsoft.WindowsPhone", "Microsoft.ZuneVideo", "Microsoft.ZuneMusic",
+                "Microsoft.MicrosoftSolitaireCollection", "Microsoft.WindowsFeedbackHub"
+            };
         }
     }
 }
