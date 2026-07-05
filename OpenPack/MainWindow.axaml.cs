@@ -20,9 +20,21 @@ public partial class MainWindow : Window
     public MainWindow()
     {
         InitializeComponent();
-        
+        CheckInstalledBrowsers();
     }
-    
+// new checker
+    public async void CheckInstalledBrowsers()
+    {
+        if (await IsAppInstalled("Mozilla.Firefox")) FirefoxToggle.IsEnabled =  false;
+        if (await IsAppInstalled("Google.Chrome")) ChromeToggle.IsEnabled =  false;
+        if (await IsAppInstalled("Brave.Brave")) BraveToggle.IsEnabled =  false;
+        if (await IsAppInstalled("Opera.Opera")) OperaToggle.IsEnabled =  false;
+        if (await IsAppInstalled("Opera.OperaGX")) OperaGXToggle.IsEnabled =  false;
+        if (await IsAppInstalled("DuckDuckGo.DesktopBrowser")) DuckDuckGoToggle.IsEnabled =  false;
+        if (await IsAppInstalled("TheBrowserCompany.Arc")) ArcToggle.IsEnabled =  false;
+        if (await IsAppInstalled("LibreWolf.LibreWolf")) LibreWolfToggle.IsEnabled =  false;
+        if (await IsAppInstalled("Zen-Team.Zen-Browser")) ZenToggle.IsEnabled =  false;
+    }
     // BROWSER PANEL 
     public async void StartInstallButton_Click(object? sender, RoutedEventArgs e)
     {
