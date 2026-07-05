@@ -2,18 +2,20 @@
 
 **OpenPack** is a lightweight Windows setup tool that lets you install your favorite apps, remove bloatware, and activate Windows after a fresh install — all in just a few clicks.
 
+> 🎉 **Version 1.0.0 is out!** → [Download the EXE](https://github.com/octavian-ps/OpenPack/releases/tag/Rel)
+
 ---
 
 ## 🚀 What is OpenPack?
 
-OpenPack takes away the tedious work of setting up a new Windows installation. Select your browsers, pick your apps, debloat Windows, and activate it — OpenPack walks you through each step automatically using **winget** and **PowerShell** in the background.
+OpenPack takes away the tedious work of setting up a new Windows installation. Select your browsers, search and install any app, debloat Windows, and activate it — all from a clean sidebar interface, fully powered by **winget** and **PowerShell** in the background.
 
 ---
 
 ## ✅ Currently Supported Features
 
-### 🌐 Step 1 — Browsers
-Pick one or more browsers to install:
+### 🌐 Browsers
+Pick one or more browsers to install. OpenPack checks if they're already installed before doing anything:
 
 - **Firefox** — Mozilla.Firefox
 - **Chrome** — Google.Chrome
@@ -25,31 +27,30 @@ Pick one or more browsers to install:
 - **LibreWolf** — LibreWolf.LibreWolf
 - **Zen Browser** — Zen-Team.Zen-Browser
 
-### 📦 Step 2 — Apps
-Instead of a fixed list, OpenPack lets you **search winget directly** from within the app. Type any app name, hit Search or press Enter, and results appear instantly. Select one or multiple apps from the list and click install — OpenPack handles the rest.
+### 📦 Apps
+Search the entire winget catalog directly from within the app. Type any app name, press Enter or click Search, and pick one or multiple results from the list. OpenPack checks if each app is already installed before installing, and shows the status for each one in real time.
 
-This means you have access to the **entire winget catalog** — tens of thousands of apps — not just a pre-defined selection.
-
-### 🧹 Step 3 — Debloat
-Automatically removes pre-installed Microsoft bloatware — tailored to your Windows version:
+### 🧹 Debloat
+Automatically removes pre-installed Microsoft bloatware — tailored to your Windows version. Also disables Windows telemetry via registry:
 
 - **Windows 11:** Removes Bing News, Weather, Get Started, Your Phone, Feedback Hub, Xbox apps, Zune, Office Hub, Skype, Solitaire, Todos, People, Maps, Alarms, Camera, Paint 3D, Mixed Reality Portal and more
 - **Windows 10:** Removes 3D Builder, Bing Finance/Sports/Food/Health/Travel, Messaging, 3D Viewer, Power BI, Network Speed Test, Sway, OneConnect, Print 3D, Skype, Windows Phone, Zune, Solitaire, Feedback Hub and more
 
-### 🔑 Step 4 — Windows Activation
+### 🔑 Windows Activation
 Checks whether Windows is already activated. If not, it runs the activation process automatically — no manual steps needed.
 
 ---
 
 ## 🛠️ How Does It Work?
 
-1. Launch OpenPack
-2. Select your **browsers** and click **"Install Selected"**
-3. **Search** for any app by name, select one or more results, and click **"Install Selected Apps"**
-4. Click **"Debloat"** to remove unwanted Microsoft apps (auto-detected for Win10/11)
-5. Click **"Check And Activate Windows 10/11"** — OpenPack checks your activation status and activates if needed
+OpenPack has a **sidebar navigation** — switch between any section at any time:
 
-Every step flows into the next automatically. All installations and removals run silently in the background. You can also go **back** to any previous step at any time.
+1. **🌐 Browsers** — toggle the browsers you want and click "Install Selected"
+2. **📦 Apps** — search for anything, select one or more results, click "Install Selected Apps"
+3. **🧹 Debloat** — click "Debloat" to remove bloatware and disable telemetry (auto-detects Win10/11)
+4. **🔑 Activation** — click "Check And Activate Windows 10/11" to check and activate if needed
+
+All installations and removals run silently in the background with real-time status feedback.
 
 ---
 
@@ -57,7 +58,7 @@ Every step flows into the next automatically. All installations and removals run
 
 - **Framework:** [Avalonia UI](https://avaloniaui.net/) (Version 12.0.5)
 - **Target Platform:** .NET 10.0 / Windows
-- **Theme:** Fluent Design (follows system setting: Dark / Light)
+- **Theme:** Dark UI (`#1e1e1e` / `#2b2b2b`)
 - **Package Manager:** winget (Windows Package Manager)
 - **Language:** C#
 - **Requires Admin Rights:** Yes (for debloat & activation)
@@ -73,11 +74,12 @@ Every step flows into the next automatically. All installations and removals run
 
 ---
 
-## ⬇️ Download (Coming Soon)
+## ⬇️ Download
 
-A pre-built **EXE installer** is coming soon — no setup, no terminal, no dependencies. Just download, double-click, and you're ready to go.
+### ✅ Version 1.0.0 — Available Now
+Grab the EXE directly — no setup, no terminal, no dependencies. Just download and run.
 
-Stay tuned for the first release on the [Releases](../../releases) page.
+**[→ Download OpenPack v1.0.0](https://github.com/octavian-ps/OpenPack/releases/tag/Rel)**
 
 ---
 
@@ -94,18 +96,7 @@ dotnet run --project OpenPack
 
 ## 🔮 What's Coming Next?
 
-OpenPack is actively being developed and new things keep arriving. Here's what's planned for upcoming releases:
-
-### 🎨 Improved Design
-A full UI overhaul is on the way — cleaner layout, better visual structure, and a more polished overall look and feel.
-
-### 🛡️ Better Detection & Error Handling
-Improved system detection (Windows version, already installed apps, activation status) and proper error handling throughout — so OpenPack handles edge cases gracefully instead of failing silently.
-
-### And Much More...
-New windows, new categories, and new features will keep arriving over time. The goal is a complete, all-in-one setup tool for Windows — built by enthusiasts, for everyone.
-
-> OpenPack grows continuously. Stay tuned for updates on the [Releases](../../releases) page.
+OpenPack is not actively being developed because it has reached it state of peace and calm
 
 ---
 
