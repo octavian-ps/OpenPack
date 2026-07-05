@@ -98,12 +98,27 @@
                 <ListBox x:Name="AppsListBoxSearch" Height="350" SelectionMode="Multiple, Toggle" />
                 <Button x:Name="StartInstallButtonApps" Content="Install Selected Apps" HorizontalAlignment="Center" Click="StartInstallButton_Apps_Click" />
             </StackPanel>
-            
+
             <!-- 3. DEBLOAT PANEL -->
-            <StackPanel x:Name="DebloatPanel" IsVisible="False" Spacing="20">
-                <TextBlock Text="Windows Bloatware Removal" FontSize="16" Foreground="White" Margin="5"/>
-                <Button x:Name="StartDebloatButton" Content="Debloat" HorizontalAlignment="Center" Click="StartDebloat_Click" />
-            </StackPanel>
+            <ScrollViewer x:Name="DebloatPanel" IsVisible="False">
+                <StackPanel Spacing="10" Margin="0,0,10,0">
+                    <TextBlock Text="Windows Bloatware Removal" FontSize="16" Foreground="White" Margin="5"/>
+        
+                    <CheckBox x:Name="ToggleAllDebloatCheckBox" Content="Select All" Click="ToggleAllDebloat_Click" Foreground="White" FontWeight="Bold" Margin="0,0,0,10"/>
+        
+                    <CheckBox Name="DebloatEdge" Content="Remove Microsoft Edge" Foreground="White" />
+                    <CheckBox Name="DebloatOneDrive" Content="Remove OneDrive" Foreground="White" />
+                    <CheckBox Name="Cortana" Content="Remove Cortana" Foreground="White" />
+                    <CheckBox Name="SmartphoneLink" Content="Remove Smartphone-Link" Foreground="White" />
+                    <CheckBox Name="XboxApps" Content="Remove ALL Xbox-Apps" Foreground="White" />
+                    <CheckBox Name="WindowsMaps" Content="Remove Windows Maps" Foreground="White" />
+                    <CheckBox Name="WeatherApp" Content="Remove WeatherApp" Foreground="White" />
+                    <CheckBox Name="Contacts" Content="Remove Windows Contacts App" Foreground="White" />
+                    <CheckBox Name="MailAndCalender" Content="Remove Windows Mail and calender" Foreground="White" />
+                    <TextBlock Text="There are actually more items being disabled in the background; you only see the optional ones you can choose to disable, but more are being removed than just the ones listed here."></TextBlock>
+                    <Button x:Name="StartDebloatButton" Content="Remove Selected And Standard" HorizontalAlignment="Center" Click="StartDebloat_Click" Margin="0,20,0,0"/>
+                </StackPanel>
+            </ScrollViewer>
             
             <!-- 4. ACTIVATION PANEL -->
             <StackPanel x:Name="ActivationPanel" IsVisible="False" Spacing="20">

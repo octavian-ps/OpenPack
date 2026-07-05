@@ -20,8 +20,9 @@ public partial class MainWindow : Window
     public MainWindow()
     {
         InitializeComponent();
+        
     }
-
+    
     // BROWSER PANEL 
     public async void StartInstallButton_Click(object? sender, RoutedEventArgs e)
     {
@@ -43,6 +44,7 @@ public partial class MainWindow : Window
         if (ArcToggle.IsChecked == true) await InstallBrowser("Arc", "TheBrowserCompany.Arc");
         if (LibreWolfToggle.IsChecked == true) await InstallBrowser("LibreWolf", "LibreWolf.LibreWolf");
         if (ZenToggle.IsChecked == true) await InstallBrowser("Zen Browser", "Zen-Team.Zen-Browser");
+
 
         StartInstallButton.Content = "Finished installing";
     }
@@ -156,17 +158,43 @@ public partial class MainWindow : Window
     }
 
     //  DEBLOAT PANEL
-    public async void StartDebloat_Click(object? sender, RoutedEventArgs e)
+public async void StartDebloat_Click(object? sender, RoutedEventArgs e)
+{
+    List<string> bloatwareList = GetBloatwareList();
+    foreach (string item in bloatwareList)
     {
-        List<string> bloatwareList = GetBloatwareList();
-
-        foreach (string item in bloatwareList)
-        {
-            await UninstallApp(item);
-        }
-        await DisableWindowsTelemetry();
-        StartDebloatButton.Content = "Finished Debloating";
+        await UninstallApp(item);
     }
+
+    if (DebloatEdge?.IsChecked == true) await RunPowerShellAdmin("Get-AppxPackage *edge* | Remove-AppxPackage");
+    if (DebloatOneDrive?.IsChecked == true) await RunPowerShellAdmin("Get-AppxPackage *onedrive* | Remove-AppxPackage");
+    if (Cortana?.IsChecked == true) await RunPowerShellAdmin("Get-AppxPackage -allusers *Microsoft.549981C3F5F10* | Remove-AppxPackage");
+    if (SmartphoneLink?.IsChecked == true) await RunPowerShellAdmin("Get-AppxPackage -allusers *YourPhone* | Remove-AppxPackage");
+    if (XboxApps?.IsChecked == true) await RunPowerShellAdmin("Get-AppxPackage -allusers *Xbox* | Remove-AppxPackage");
+    if (WindowsMaps?.IsChecked == true) await RunPowerShellAdmin("Get-AppxPackage -allusers *WindowsMaps* | Remove-AppxPackage");
+    if (WeatherApp?.IsChecked == true) await RunPowerShellAdmin("Get-AppxPackage -allusers *BingWeather* | Remove-AppxPackage");
+    if (Contacts?.IsChecked == true) await RunPowerShellAdmin("Get-AppxPackage -allusers *People* | Remove-AppxPackage");
+    if (MailAndCalender?.IsChecked == true) await RunPowerShellAdmin("Get-AppxPackage -allusers *windowscommunicationsapps* | Remove-AppxPackage");
+    
+    await RunPowerShellAdmin("Set-ItemProperty -Path 'HKLM:\\SOFTWARE\\Policies\\Microsoft\\Windows\\DataCollection' -Name 'AllowTelemetry' -Value 0 -Force");
+
+    if (StartDebloatButton != null) StartDebloatButton.Content = "Finished Debloating";
+}
+
+public void ToggleAllDebloat_Click(object? sender, RoutedEventArgs e)
+{
+    bool isChecked = ToggleAllDebloatCheckBox.IsChecked == true; 
+
+    if (DebloatEdge != null) DebloatEdge.IsChecked = isChecked;
+    if (DebloatOneDrive != null) DebloatOneDrive.IsChecked = isChecked;
+    if (Cortana != null) Cortana.IsChecked = isChecked;
+    if (SmartphoneLink != null) SmartphoneLink.IsChecked = isChecked;
+    if (XboxApps != null) XboxApps.IsChecked = isChecked;
+    if (WindowsMaps != null) WindowsMaps.IsChecked = isChecked;
+    if (WeatherApp != null) WeatherApp.IsChecked = isChecked;
+    if (Contacts != null) Contacts.IsChecked = isChecked;
+    if (MailAndCalender != null) MailAndCalender.IsChecked = isChecked;
+}
 
     //  ACTIVATION PANEL
     public async void StartActivation_Click(object? sender, RoutedEventArgs e)
@@ -331,6 +359,28 @@ public partial class MainWindow : Window
         catch
         {
             StartDebloatButton.Content = "Telemetry Block Failed (No Admin?)";
+            await Task.Delay(2000);
+        }
+    }
+
+    private async Task RunPowerShellAdmin(string command)
+    {
+        try
+        {
+            StartDebloatButton.Content = "Disabling Telemetry...";
+            var process = Process.Start(new ProcessStartInfo
+            {
+                FileName = "powershell.exe",
+                Arguments = $"-Command \"{command}\"",
+                CreateNoWindow = true,
+                UseShellExecute = true,
+                Verb = "runas" //needddss admin UwU Rights
+            });
+            await process!.WaitForExitAsync();
+        }
+        catch
+        {
+            StartDebloatButton.Content = "Action Failed (No Admin?)";
             await Task.Delay(2000);
         }
     }
