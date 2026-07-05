@@ -1,6 +1,6 @@
 # OpenPack
 
-**OpenPack** is a lightweight Windows setup tool that lets you install your favorite apps, remove bloatware, and activate Windows after a fresh install — all in just a few clicks.
+**OpenPack** is the ultimate tool for setting up a fresh Windows installation. Install your favorite apps, remove bloatware, tweak your system, and activate Windows — all in just a few clicks.
 
 > 🎉 **Version 1.0.0 is out!** → [Download the EXE](https://github.com/octavian-ps/OpenPack/releases/tag/Rel)
 
@@ -94,9 +94,28 @@ dotnet run --project OpenPack
 
 ---
 
-## 🔮 What's Coming Next?
+## 🔮 What's Coming in v2.0.0
 
-OpenPack is not actively being developed because it has reached it state of peace and calm
+A major update is in the works. v2.0.0 will be a big step up in quality, stability, and features across the board:
+
+### 🔧 Windows Tweaks
+A brand new section dedicated to optimizing your fresh Windows install — performance tweaks, visual adjustments, privacy settings, and more. All in one place, all in one click.
+
+### 🧹 Deeper Debloat & Selection
+More control over what gets removed — choose exactly which bloatware to debloat instead of removing everything at once.
+
+### 🔒 Security Improvements
+More hardening options, better handling of admin rights, and safer execution of PowerShell commands throughout the app.
+
+### 🌐 More Browsers
+Even more browsers may be added to the selection.
+
+### ⚙️ General Stability & Polish
+Everything more robust — better error handling, smoother flows, and an overall more reliable experience from start to finish.
+
+With v2.0.0, OpenPack aims to become the **ultimate tool for setting up a fresh Windows installation** — everything you need, nothing you don't.
+
+> v2.0.0 is actively being worked on. Stay tuned on the [Releases](https://github.com/octavian-ps/OpenPack/releases) page.
 
 ---
 
