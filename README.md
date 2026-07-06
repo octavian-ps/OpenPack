@@ -127,4 +127,4 @@ Ideas, suggestions, and pull requests are always welcome! Feel free to open an i
 
 ## 📄 License
 
-This project is licensed under the [MIT License](LICENSE).
+This project is licensed under the [MIT License](LICENSE)..
